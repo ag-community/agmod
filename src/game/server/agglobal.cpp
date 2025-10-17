@@ -702,6 +702,7 @@ void AgInitGame()
 	CVAR_REGISTER(&ag_hl25_satchel_controls);
 	CVAR_REGISTER(&ag_hl25_handgrenade_throw);
 	CVAR_REGISTER(&ag_hl25_mp5_max_initial_ammo);
+	CVAR_REGISTER(&ag_hl25_mp5_spread);
 
 	Command.Init();
 
