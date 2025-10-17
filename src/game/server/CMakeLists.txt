@@ -319,3 +319,30 @@ if( GENERATE_AMXX_OFFSETS )
 		${AMXX_OFFSETS_CLASS_LIST}
 	)
 endif()
+
+if( GENERATE_HAMDATA_INI AND PLATFORM_LINUX )
+	set( HAMDATA_GENERATOR_REPO_DIR "${CMAKE_BINARY_DIR}/hamdata_ini_generator" )
+	set( HAMDATA_GENERATOR_DIR "${HAMDATA_GENERATOR_REPO_DIR}/target/release" )
+	set( HAMDATA_GENERATOR_EXEC "${HAMDATA_GENERATOR_DIR}/vtable" )
+
+	FetchContent_Declare(
+        hamdata_ini_generator
+        GIT_REPOSITORY https://github.com/ag-community/hamdata_ini_generator
+        SOURCE_DIR ${HAMDATA_GENERATOR_REPO_DIR}
+    )
+
+    FetchContent_MakeAvailable( hamdata_ini_generator )
+
+	add_custom_command(
+		TARGET server POST_BUILD
+		COMMAND make -C ${HAMDATA_GENERATOR_REPO_DIR} release
+		COMMENT "Compiling hamdata.ini generator"
+	)
+
+	add_custom_command(
+		TARGET server POST_BUILD
+		COMMAND ${HAMDATA_GENERATOR_EXEC} vtable-dump $<TARGET_FILE:server>
+		WORKING_DIRECTORY ${HAMDATA_GENERATOR_DIR}
+		COMMENT "Generating hamdata.ini"
+	)
+endif()

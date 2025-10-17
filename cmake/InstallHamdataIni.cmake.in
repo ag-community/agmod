@@ -1,0 +1,15 @@
+# Set the binary dir path from configure_file
+set( ACTUAL_BINARY_DIR "@CMAKE_BINARY_DIR@" )
+
+set( hamdata_ini "${ACTUAL_BINARY_DIR}/hamdata_ini_generator/target/release/output/auto_hamdata190.ini" )
+
+if( NOT EXISTS ${hamdata_ini} )
+    message( FATAL_ERROR "hamdata.ini file not found at: ${hamdata_ini}" )
+endif()
+
+# Install it
+file(
+    INSTALL ${hamdata_ini}
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/addons/amxmodx/configs"
+    RENAME "hamdata.ini"
+)

@@ -413,3 +413,18 @@ if( GENERATE_AMXX_OFFSETS )
 		COMPONENT server
 	)
 endif()
+
+if ( GENERATE_HAMDATA_INI AND PLATFORM_LINUX )
+	# Generate the install script
+	configure_file(
+		${CMAKE_SOURCE_DIR}/cmake/InstallHamdataIni.cmake.in
+		${CMAKE_CURRENT_BINARY_DIR}/InstallHamdataIni.cmake
+		@ONLY
+	)
+
+	# Install hamdata.ini file
+	install(
+		SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/InstallHamdataIni.cmake
+		COMPONENT server
+	)
+endif()

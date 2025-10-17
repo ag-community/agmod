@@ -18,6 +18,7 @@
 
         "AUTO_DEPLOY": false,
         "GENERATE_AMXX_OFFSETS": false,
+        "GENERATE_HAMDATA_INI": false,
         "GNU_FORCE_COLORED_OUTPUT": true
       }
     },
@@ -28,6 +29,7 @@
       "cacheVariables": {
         "GNU_FORCE_COLORED_OUTPUT": false,
         "GENERATE_AMXX_OFFSETS": true,
+        "GENERATE_HAMDATA_INI": true,
         "WARNINGS_ARE_ERRORS": true
       }
     }

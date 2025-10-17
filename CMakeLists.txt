@@ -33,6 +33,7 @@ include( CTest )
 option( AUTO_DEPLOY				"Whether to automatically deploy to deploy paths" )
 option( NO_STEAM_API			"Disable Steam API" )
 option( GENERATE_AMXX_OFFSETS	"Generate AMXX offsets when building" )
+option( GENERATE_HAMDATA_INI 	"Generate hamdata.ini when building" )
 
 #-----------------------------------------------------------------
 # Compiler checks
