@@ -6,7 +6,8 @@
       "inherits": ["base", "platform-generator"],
       "cacheVariables": {
         "AUTO_DEPLOY": true,
-        "GENERATE_AMXX_OFFSETS": false
+        "GENERATE_AMXX_OFFSETS": false,
+        "GENERATE_HAMDATA_INI": false
       }
     }
   ],

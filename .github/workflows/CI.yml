@@ -13,7 +13,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-    name: "Build"
+    name: "Build on ${{ matrix.os.suffix }}"
 
     strategy:
       matrix:
@@ -58,6 +58,9 @@ jobs:
           vcpkgDirectory: '${{env.VCPKG_ROOT}}'
           vcpkgGitCommitId: 'ef7dbf94b9198bc58f45951adcf1f041fcbc5ea0'
           runVcpkgInstall: false
+      
+      - name: Set up rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1.15.0
 
       # Run CMake+vcpkg+Ninja+CTest to generate/build/test.
       - name: Build and Test with CMake
@@ -77,8 +80,8 @@ jobs:
         run: |
           cmake --install ${{github.workspace}}/_build/github-actions --config RelWithDebInfo --prefix ${{github.workspace}}/_build/ci-install --component ${{ matrix.target }}
 
-      # Prepare artifact
-      - name: Prepare artifact
+      # Prepare and Upload Artifact
+      - name: Prepare and Upload Artifact
         id: prepare_artifact
         run: >
           python scripts/package_target.py
@@ -87,10 +90,37 @@ jobs:
           --artifact-dir ${{github.workspace}}/_build/ci-artifact
           --target ${{ matrix.target }}
           --suffix ${{ matrix.os.suffix }}
-
-      # Upload result
-      - name: Upload build result
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.prepare_artifact.outputs.artifact_name }}
-          path: ${{github.workspace}}/_build/ci-artifact
+          path: ${{github.workspace}}/_build/ci-artifact/${{ steps.prepare_artifact.outputs.artifact_name }}
+
+  package:
+    name: "Package Release"
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Copy hamdata.ini to Windows artifact
+        run: |
+          mkdir -p artifacts/AG-server-ci-windows/ag_addon/addons/amxmodx/configs
+          cp artifacts/AG-server-ci-linux/ag_addon/addons/amxmodx/configs/hamdata.ini artifacts/AG-server-ci-windows/ag_addon/addons/amxmodx/configs/hamdata.ini
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AG-server-ci-windows
+          path: artifacts/AG-server-ci-windows
+          overwrite: true
+
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AG-server-ci-linux
+          path: artifacts/AG-server-ci-linux
+          overwrite: true
